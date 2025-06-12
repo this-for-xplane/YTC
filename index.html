@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YouTube Clone Deluxe</title>
+<style>
+  :root {
+    --bg-light: #f9f9f9;
+    --bg-dark: #181818;
+    --color-light: #000;
+    --color-dark: #fff;
+    --header-bg-light: #fff;
+    --header-bg-dark: #202020;
+    --sidebar-bg-light: #f1f1f1;
+    --sidebar-bg-dark: #202020;
+    --video-bg-light: #fff;
+    --video-bg-dark: #282828;
+  }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg-dark);
+    color: var(--color-dark);
+    transition: background 0.3s, color 0.3s;
+  }
+  body.light {
+    background: var(--bg-light);
+    color: var(--color-light);
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--header-bg-dark);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: background 0.3s;
+  }
+  body.light header {
+    background: var(--header-bg-light);
+  }
+  .logo {
+    color: #ff0000;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: default;
+  }
+  .search {
+    flex-grow: 1;
+    max-width: 500px;
+    margin: 0 20px;
+  }
+  .search input {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+  }
+  .sidebar {
+    width: 220px;
+    background: var(--sidebar-bg-dark);
+    height: 100vh;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.4);
+    transition: background 0.3s;
+  }
+  body.light .sidebar {
+    background: var(--sidebar-bg-light);
+    box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+  }
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .sidebar li {
+    padding: 14px 25px;
+    cursor: pointer;
+    color: #ccc;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sidebar li:hover {
+    background: #ff0000;
+    color: white;
+  }
+  .content {
+    margin-left: 220px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    transition: margin-left 0.3s;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none;
+    }
+    .content {
+      margin-left: 0;
+    }
+  }
+  .video {
+    background: var(--video-bg-dark);
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  body.light .video {
+    background: var(--video-bg-light);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .thumb {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px;
+    color: white;
+    pointer-events: none;
+  }
+  .info {
+    padding: 12px 14px;
+  }
+  .title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: inherit;
+  }
+  .meta {
+    color: #aaa;
+    font-size: 14px;
+  }
+  /* Dark/light toggle button */
+  .toggle-btn {
+    background: transparent;
+    border: 2px solid #ff0000;
+    color: #ff0000;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+  .toggle-btn:hover {
+    background: #ff0000;
+    color: white;
+  }
+
+  /* Video Player Modal */
+  #playerModal {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+  }
+  #playerModal.active {
+    display: flex;
+  }
+  #playerModal iframe {
+    width: 80vw;
+    height: 45vw;
+    max-width: 960px;
+    max-height: 540px;
+    border: none;
+    border-radius: 8px;
+  }
+  #playerModal .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Comments Section */
+  .comments {
+    margin-top: 15px;
+    padding: 10px 14px;
+    background: var(--video-bg-dark);
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  body.light .comments {
+    background: var(--video-bg-light);
+  }
+  .comment {
+    margin-bottom: 12px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+  }
+  body.light .comment {
+    border-color: #ccc;
+  }
+  .comment strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #ff0000;
+  }
+  .comment p {
+    margin: 0;
+  }
+  .comment-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+  }
+  .comment-form input {
+    flex-grow: 1;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+  .comment-form button {
+    padding: 6px 14px;
+    background: #ff0000;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .comment-form button:hover {
+    background: #cc0000;
+  }
+
+  /* Login Modal */
+  #loginModal {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+  }
+  #loginModal.active {
+    display: flex;
+  }
+  #loginModal .modal-content {
+    background: var(--video-bg-dark);
+    padding: 25px 30px;
+    border-radius: 8px;
+    width: 300px;
+    color: white;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  body.light #loginModal .modal-content {
+    background: var(--video-bg-light);
+    color: var(--color-light);
+  }
+  #loginModal h2 {
+    margin-top: 0;
+  }
+  #loginModal input {
+    width: 100%;
+    margin: 12px 0;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+  }
+  #loginModal button {
+    background: #ff0000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  #loginModal button:hover {
+    background: #cc0000;
+  }
+  #loginModal .close-login {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">YouTube</div>
+  <div class="search">
+    <input id="searchInput" type="text" placeholder="Search videos..." />
+  </div>
+  <button id="toggleThemeBtn" class="toggle-btn">Light Mode</button>
+  <button id="loginBtn" class="toggle-btn" style="margin-left:10px;">Login</button>
+</header>
+
+<nav class="sidebar">
+  <ul>
+    <li>Home</li>
+    <li>Trending</li>
+    <li>Subscriptions</li>
+    <li>Library</li>
+    <li>History</li>
+    <li>Watch Later</li>
+  </ul>
+</nav>
+
+<main class="content" id="videosContainer">
+  <!-- 동영상 카드들이 JS로 생성됨 -->
+</main>
+
+<!-- 영상 재생 모달 -->
+<div id="playerModal">
+  <div class="close-btn" id="closePlayer">&times;</div>
+  <iframe src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+  <div class="comments" id="commentsSection">
+    <!-- 댓글 -->
+  </div>
+  <form id="commentForm" class="comment-form">
+    <input id="commentInput" type="text" placeholder="Add a comment..." required />
+    <button type="submit">Post</button>
+  </form>
+</div>
+
+<!-- 로그인 모달 -->
+<div id="loginModal">
+  <div class="modal-content">
+    <div class="close-login" id="closeLogin">&times;</div>
+    <h2>Login</h2>
+    <input id="username" type="text" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="loginSubmit">Login</button>
+  </div>
+</div>
+
+<script>
+  const videos = [
+    {
+      id: 'dQw4w9WgXcQ',
+      title: "Rick Astley - Never Gonna Give You Up",
+      author: "Rick Astley",
+      views: "1.2B views",
+      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+    },
+    {
+      id: '3JZ_D3ELwOQ',
+      title: "Imagine Dragons - Believer",
+      author: "Imagine Dragons",
+      views: "1B views",
+      thumbnail: "https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg"
+    },
+    {
+      id: 'fJ9rUzIMcZQ',
+      title: "Queen - Bohemian Rhapsody",
+      author: "Queen",
+      views: "1.5B views",
+      thumbnail: "https://img.youtube.com/vi/fJ9rUzIMcZQ/hqdefault.jpg"
+    },
+    {
+      id: '9bZkp7q19f0',
+      title: "PSY - GANGNAM STYLE",
+      author: "PSY",
+      views: "4.5B views",
+      thumbnail: "https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg"
+    },
+    {
+      id: 'LsoLEjrDogU',
+      title: "Coldplay - Paradise",
+      author: "Coldplay",
+      views: "900M views",
+      thumbnail: "https://img.youtube.com/vi/LsoLEjrDogU/hqdefault.jpg"
+    },
+  ];
+
+  const videosContainer = document.getElementById('videosContainer');
+  const searchInput = document.getElementById('searchInput');
+  const playerModal = document.getElementById('playerModal');
+  const closePlayer = document.getElementById('closePlayer');
+  const iframe = playerModal.querySelector('iframe');
+  const commentsSection = document.getElementById('commentsSection');
+  const commentForm = document.getElementById('commentForm');
+  const commentInput = document.getElementById('commentInput');
+
+  // 로그인
+  const loginBtn = document.getElementById('loginBtn');
+  const loginModal = document.getElementById('loginModal');
+  const closeLogin = document.getElementById('closeLogin');
+  const loginSubmit = document.getElementById('loginSubmit');
+  let loggedInUser = null;
+
+  // 테마 토글
+  const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+
+  function createVideoCard(video) {
+    const div = document.createElement('div');
+    div.className = 'video';
+    div.dataset.videoId = video.id;
+
+    div.innerHTML = `
+      <div class="thumb">
+        <img src="${video.thumbnail}" alt="${video.title}" />
+        <div class="play">&#9658;</div>
+      </div>
+      <div class="info">
+        <div class="title">${video.title}</div>
+        <div class="meta">${video.author} • ${video.views}</div>
+      </div>
+    `;
+
+    div.addEventListener('click', () => {
+      openVideo(video.id);
+    });
+
+    return div;
+  }
+
+  function renderVideos(filter = '') {
+    videosContainer.innerHTML = '';
+    const filtered = videos.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
+    filtered.forEach(video => {
+      videosContainer.appendChild(createVideoCard(video));
+    });
+  }
+
+  function openVideo(videoId) {
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    playerModal.classList.add('active');
+    loadComments(videoId);
+  }
+
+  function closeVideo() {
+    iframe.src = '';
+    playerModal.classList.remove('active');
+    clearComments();
+  }
+
+  // 댓글 저장 구조 (간단히 영상 ID별 배열)
+  const commentsDB = {};
+
+  function loadComments(videoId) {
+    commentsSection.innerHTML = '';
+    if(!commentsDB[videoId]) commentsDB[videoId] = [];
+    commentsDB[videoId].forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'comment';
+      div.innerHTML = `<strong>${c.user}:</strong><p>${c.text}</p>`;
+      commentsSection.appendChild(div);
+    });
+  }
+
+  function clearComments() {
+    commentsSection.innerHTML = '';
+  }
+
+  commentForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(!loggedInUser) {
+      alert('Please login to comment!');
+      openLoginModal();
+      return;
+    }
+    const text = commentInput.value.trim();
+    if(!text) return;
+    // 현재 재생중인 영상 ID
+    const videoId = iframe.src.match(/embed\/([^?]+)/)[1];
+    commentsDB[videoId].push({user: loggedInUser, text});
+    loadComments(videoId);
+    commentInput.value = '';
+  });
+
+  closePlayer.addEventListener('click', closeVideo);
+
+  searchInput.addEventListener('input', () => {
+    renderVideos(searchInput.value);
+  });
+
+  // 테마 토글 기능
+  toggleThemeBtn.addEventListener('click', () => {
+    if(document.body.classList.contains('light')) {
+      document.body.classList.remove('light');
+      toggleThemeBtn.textContent = 'Light Mode';
+    } else {
+      document.body.classList.add('light');
+      toggleThemeBtn.textContent = 'Dark Mode';
+    }
+  });
+
+  // 로그인 모달 열기/닫기
+  loginBtn.addEventListener('click', openLoginModal);
+  closeLogin.addEventListener('click', closeLoginModal);
+
+  function openLoginModal() {
+    loginModal.classList.add('active');
+  }
+  function closeLoginModal() {
+    loginModal.classList.remove('active');
+  }
+
+  loginSubmit.addEventListener('click', () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    if(username && password) {
+      loggedInUser = username;
+      alert(`Welcome, ${username}!`);
+      closeLoginModal();
+    } else {
+      alert('Please enter username and password.');
+    }
+  });
+
+  // 초기 렌더링
+  renderVideos();
+
+</script>
+</body>
+</html>
