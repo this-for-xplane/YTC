@@ -1,196 +1,148 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>YouTube 클론</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #fff;
-    color: #030303;
-  }
-  header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 56px;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    z-index: 100;
-  }
-  .logo {
-    font-weight: 700;
-    font-size: 24px;
-    color: #FF0000;
-    cursor: pointer;
-    margin-right: 24px;
-    user-select: none;
-  }
-  .search-bar {
-    flex: 1;
-    max-width: 600px;
-    display: flex;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .search-bar input {
-    flex: 1;
-    padding: 8px 12px;
-    border: none;
-    font-size: 16px;
-    outline: none;
-  }
-  .search-bar button {
-    background-color: #f8f8f8;
-    border: none;
-    padding: 0 16px;
-    cursor: pointer;
-  }
-  .user-icon {
-    width: 36px;
-    height: 36px;
-    margin-left: 24px;
-    background: #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  main {
-    display: flex;
-    margin-top: 56px;
-  }
-  nav.sidebar {
-    width: 240px;
-    border-right: 1px solid #ddd;
-    height: calc(100vh - 56px);
-    overflow-y: auto;
-    background: #fff;
-    position: fixed;
-    top: 56px; bottom: 0; left: 0;
-  }
-  nav.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  nav.sidebar li {
-    padding: 14px 24px;
-    font-size: 14px;
-    color: #606060;
-    cursor: pointer;
-  }
-  nav.sidebar li:hover {
-    background-color: #f2f2f2;
-    color: #000;
-  }
-
-  section.content {
-    margin-left: 240px;
-    padding: 16px 24px;
-    flex: 1;
-    min-height: calc(100vh - 56px);
-    background: #f9f9f9;
-  }
-
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
-    gap: 24px;
-  }
-
-  .video-card {
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-    cursor: pointer;
-    transition: box-shadow 0.2s ease;
-  }
-  .video-card:hover {
-    box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
-  }
-  .video-thumb {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-  .video-info {
-    padding: 12px 14px 14px;
-  }
-  .video-title {
-    font-weight: 500;
-    font-size: 16px;
-    margin-bottom: 6px;
-    line-height: 1.2;
-    color: #030303;
-  }
-  .video-channel {
-    font-size: 14px;
-    color: #606060;
-    margin-bottom: 4px;
-  }
-  .video-meta {
-    font-size: 12px;
-    color: #909090;
-  }
-
-  @media(max-width: 768px) {
-    nav.sidebar {
-      position: static;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube 클론</title>
+  <style>
+    /* 기본 스타일 설정 */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ff0000;
+      cursor: pointer;
+    }
+    header .search-bar {
+      display: flex;
+      align-items: center;
+      width: 50%;
+    }
+    header .search-bar input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    header .search-bar button {
+      padding: 8px;
+      border: none;
+      background-color: #ff0000;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    header .search-bar button:hover {
+      background-color: #e60000;
+    }
+    main {
+      display: flex;
+      margin-top: 20px;
+    }
+    nav {
+      width: 240px;
+      background-color: #fff;
+      border-right: 1px solid #e0e0e0;
+      padding: 20px;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      padding: 10px 0;
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+    }
+    nav ul li:hover {
+      background-color: #f0f0f0;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .video-card:hover {
+      transform: scale(1.05);
+    }
+    .video-card img {
       width: 100%;
       height: auto;
-      border-right: none;
-      border-bottom: 1px solid #ddd;
     }
-    section.content {
-      margin-left: 0;
-      padding: 12px;
+    .video-card .info {
+      padding: 10px;
     }
-    .video-thumb {
-      height: 160px;
+    .video-card .info h4 {
+      font-size: 16px;
+      margin: 0;
+      color: #333;
     }
-  }
-</style>
+    .video-card .info p {
+      font-size: 12px;
+      color: #777;
+      margin: 5px 0 0;
+    }
+  </style>
 </head>
 <body>
 
 <header>
   <div class="logo" onclick="window.location.reload()">YouTube</div>
   <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="검색" />
+    <input type="text" id="searchInput" placeholder="검색">
     <button id="searchBtn">검색</button>
   </div>
-  <div class="user-icon" title="User"></div>
 </header>
 
-<nav class="sidebar">
-  <ul>
-    <li>홈</li>
-    <li>탐색</li>
-    <li>구독</li>
-    <li>보관함</li>
-    <li>이력</li>
-    <li>나중에 볼 동영상</li>
-    <li>좋아요 표시한 동영상</li>
-  </ul>
-</nav>
+<main>
+  <nav>
+    <ul>
+      <li>홈</li>
+      <li>탐색</li>
+      <li>구독</li>
+      <li>보관함</li>
+      <li>이력</li>
+      <li>나중에 볼 동영상</li>
+      <li>좋아요 표시한 동영상</li>
+    </ul>
+  </nav>
 
-<section class="content">
-  <div class="video-grid" id="videoGrid"></div>
-</section>
+  <div class="content">
+    <div class="video-grid" id="videoGrid">
+      <!-- 동영상 카드가 여기에 표시됩니다. -->
+    </div>
+  </div>
+</main>
 
 <script>
   const videos = [
-    // MrBeast 영상 예시
     {
       title: "I Gave $500,000 To Random People",
       channel: "MrBeast",
@@ -207,8 +159,6 @@
       thumbnail: "https://i.ytimg.com/vi/8mP6nvPtEQQ/hqdefault.jpg",
       videoId: "8mP6nvPtEQQ"
     },
-
-    // 다큐9분 (비행기 채널)
     {
       title: "대한항공 보잉 777 비행 다큐멘터리 | 다큐9분",
       channel: "다큐9분",
@@ -225,8 +175,6 @@
       thumbnail: "https://i.ytimg.com/vi/ufEKePHKT5g/hqdefault.jpg",
       videoId: "ufEKePHKT5g"
     },
-
-    // dlwlrma 영상
     {
       title: "IU (아이유) - 'Blueming' Official Music Video",
       channel: "dlwlrma",
@@ -253,12 +201,11 @@
     const card = document.createElement('div');
     card.classList.add('video-card');
     card.innerHTML = `
-      <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" rel="noopener noreferrer" style="color:inherit; text-decoration:none;">
-        <img class="video-thumb" src="${video.thumbnail}" alt="${video.title}" />
-        <div class="video-info">
-          <div class="video-title">${video.title}</div>
-          <div class="video-channel">${video.channel}</div>
-          <div class="video-meta">${video.views} • ${video.uploaded}</div>
+      <a href="https://www.youtube.com/watch?v=${video.videoId}" target="_blank" rel="noopener noreferrer">
+        <img src="${video.thumbnail}" alt="${video.title}">
+        <div class="info">
+          <h4>${video.title}</h4>
+          <p>${video.channel} • ${video.views} • ${video.uploaded}</p>
         </div>
       </a>
     `;
@@ -267,8 +214,8 @@
 
   function renderVideos(videoList) {
     videoGrid.innerHTML = '';
-    if(videoList.length === 0) {
-      videoGrid.innerHTML = '<p style="font-size:18px; color:#999;">검색 결과가 없습니다.</p>';
+    if (videoList.length === 0) {
+      videoGrid.innerHTML = '<p>검색 결과가 없습니다.</p>';
       return;
     }
     videoList.forEach(video => {
@@ -278,7 +225,7 @@
 
   function performSearch() {
     const keyword = searchInput.value.trim().toLowerCase();
-    if(keyword === '') {
+    if (keyword === '') {
       renderVideos(videos);
       return;
     }
@@ -288,10 +235,9 @@
 
   searchBtn.addEventListener('click', performSearch);
   searchInput.addEventListener('keydown', e => {
-    if(e.key === 'Enter') performSearch();
+    if (e.key === 'Enter') performSearch();
   });
 
-  // 초기 렌더링
   renderVideos(videos);
 </script>
 
