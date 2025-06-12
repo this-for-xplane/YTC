@@ -1,333 +1,172 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mini YouTube Clone</title>
-  <style>
-    /* reset */
-    * {
-      margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
-    }
-    body {
-      background-color: #fff;
-      color: #202020;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      height: 56px;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    header .logo {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-    header .logo img {
-      height: 24px;
-      margin-right: 8px;
-    }
-    header .search-bar {
-      flex: 1;
-      margin: 0 16px;
-      display: flex;
-      border: 1px solid #ccc;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    header .search-bar input {
-      flex: 1;
-      border: none;
-      padding: 8px 12px;
-      font-size: 16px;
-      outline: none;
-    }
-    header .search-bar button {
-      background-color: #f8f8f8;
-      border: none;
-      padding: 0 16px;
-      cursor: pointer;
-      font-size: 18px;
-      color: #555;
-      border-left: 1px solid #ccc;
-      transition: background-color 0.2s;
-    }
-    header .search-bar button:hover {
-      background-color: #e2e2e2;
-    }
-    header .icon-btns {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 20px;
-      cursor: pointer;
-      color: #555;
-    }
-    aside.sidebar {
-      width: 240px;
-      border-right: 1px solid #ddd;
-      height: calc(100vh - 56px);
-      position: fixed;
-      top: 56px;
-      left: 0;
-      background: #fff;
-      padding-top: 16px;
-      overflow-y: auto;
-    }
-    aside.sidebar ul {
-      list-style: none;
-    }
-    aside.sidebar ul li {
-      padding: 12px 24px;
-      cursor: pointer;
-      font-weight: 500;
-      color: #444;
-      transition: background-color 0.2s;
-    }
-    aside.sidebar ul li:hover {
-      background-color: #eee;
-    }
-    main.content {
-      margin-left: 240px;
-      padding: 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
-      gap: 24px;
-    }
-    .video-card {
-      cursor: pointer;
-    }
-    .video-card img {
-      width: 100%;
-      border-radius: 8px;
-    }
-    .video-info {
-      margin-top: 8px;
-    }
-    .video-title {
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 4px;
-      color: #030303;
-      line-height: 1.3;
-    }
-    .video-meta {
-      font-size: 0.875rem;
-      color: #606060;
-    }
-    /* 재생 모달 */
-    #playerModal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      padding: 24px;
-    }
-    #playerModal.active {
-      display: flex;
-    }
-    #playerModal iframe {
-      width: 80vw;
-      height: 45vw; /* 16:9 비율 */
-      max-width: 1280px;
-      max-height: 720px;
-      border: none;
-      border-radius: 8px;
-      background-color: black;
-    }
-    #closePlayerBtn {
-      position: absolute;
-      top: 16px;
-      right: 24px;
-      font-size: 32px;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-    }
-    /* 반응형 */
-    @media (max-width: 768px) {
-      aside.sidebar {
-        display: none;
-      }
-      main.content {
-        margin-left: 0;
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    @media (max-width: 480px) {
-      main.content {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>YouTube Clone</title>
+<style>
+  /* 간단히 유튜브 기본 스타일 복제 */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ff0000;
+    cursor: pointer;
+  }
+  .search-bar {
+    flex: 1;
+    margin: 0 20px;
+  }
+  .search-bar input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+  .main {
+    display: flex;
+  }
+  nav {
+    width: 240px;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    height: calc(100vh - 50px);
+    box-sizing: border-box;
+  }
+  nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  nav li {
+    margin: 12px 0;
+    cursor: pointer;
+  }
+  nav li:hover {
+    color: #ff0000;
+  }
+  section.content {
+    flex: 1;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 16px;
+  }
+  .video-card {
+    cursor: pointer;
+  }
+  .thumbnail {
+    width: 100%;
+    height: 160px;
+    background-color: #ddd;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+  }
+  .video-info {
+    margin-top: 8px;
+  }
+  .video-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .video-channel {
+    font-size: 12px;
+    color: #555;
+  }
+</style>
 </head>
 <body>
-
-  <header>
-    <div class="logo" aria-label="YouTube logo" tabindex="0" role="button" onclick="location.reload()">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube" />
-      <span style="font-weight:bold; font-size:1.2rem; color:#ff0000;">MiniTube</span>
-    </div>
-    <div class="search-bar" role="search">
-      <input type="search" id="searchInput" placeholder="검색" aria-label="검색어 입력" />
-      <button id="searchBtn" aria-label="검색">🔍</button>
-    </div>
-    <div class="icon-btns" role="navigation" aria-label="헤더 아이콘들">
-      <div title="마이크" role="button" tabindex="0">🎤</div>
-      <div title="업로드" role="button" tabindex="0">⬆️</div>
-      <div title="알림" role="button" tabindex="0">🔔</div>
-      <div title="프로필" role="button" tabindex="0">👤</div>
-    </div>
-  </header>
-
-  <aside class="sidebar" role="complementary" aria-label="사이드바 메뉴">
+<header>
+  <div class="logo">YouTube</div>
+  <div class="search-bar">
+    <input type="text" placeholder="검색" id="searchInput" />
+  </div>
+  <div class="user-menu">프로필</div>
+</header>
+<div class="main">
+  <nav>
     <ul>
       <li>홈</li>
       <li>탐색</li>
       <li>구독</li>
       <li>보관함</li>
-      <li>나중에 볼 동영상</li>
-      <li>시청 기록</li>
     </ul>
-  </aside>
+  </nav>
+  <section class="content">
+    <div class="video-grid" id="videoGrid">
+      <!-- 영상 카드들이 여기에 동적 생성됨 -->
+    </div>
+  </section>
+</div>
 
-  <main class="content" id="videosContainer" role="main" aria-live="polite">
-    <!-- 영상 카드들 -->
-  </main>
+<script>
+  // 더미 영상 데이터
+  const videos = [
+    {
+      title: "최신 인기 영상 1",
+      channel: "채널1",
+      thumbnail: "https://i.ytimg.com/vi/ScMzIvxBSi4/hqdefault.jpg"
+    },
+    {
+      title: "인기 음악 MV",
+      channel: "뮤직채널",
+      thumbnail: "https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg"
+    },
+    {
+      title: "게임 하이라이트",
+      channel: "게임채널",
+      thumbnail: "https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg"
+    },
+    {
+      title: "코딩 튜토리얼",
+      channel: "프로그래밍",
+      thumbnail: "https://i.ytimg.com/vi/Ke90Tje7VS0/hqdefault.jpg"
+    }
+  ];
 
-  <div id="playerModal" role="dialog" aria-modal="true" aria-label="동영상 재생 모달">
-    <span id="closePlayerBtn" aria-label="닫기" role="button" tabindex="0">&times;</span>
-    <iframe src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-  </div>
-
-  <script>
-    const videos = [
-      {
-        id: 'dQw4w9WgXcQ',
-        title: 'Rick Astley - Never Gonna Give You Up',
-        author: 'Rick Astley',
-        views: '1.2B views',
-        uploadTime: '13 years ago',
-        thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
-      },
-      {
-        id: '3JZ_D3ELwOQ',
-        title: 'Imagine Dragons - Believer',
-        author: 'Imagine Dragons',
-        views: '1B views',
-        uploadTime: '5 years ago',
-        thumbnail: 'https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg'
-      },
-      {
-        id: 'fJ9rUzIMcZQ',
-        title: 'Queen - Bohemian Rhapsody',
-        author: 'Queen',
-        views: '1.5B views',
-        uploadTime: '14 years ago',
-        thumbnail: 'https://img.youtube.com/vi/fJ9rUzIMcZQ/hqdefault.jpg'
-      },
-      {
-        id: '9bZkp7q19f0',
-        title: 'PSY - GANGNAM STYLE',
-        author: 'PSY',
-        views: '4.5B views',
-        uploadTime: '11 years ago',
-        thumbnail: 'https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg'
-      },
-      {
-        id: 'LsoLEjrDogU',
-        title: 'Coldplay - Paradise',
-        author: 'Coldplay',
-        views: '900M views',
-        uploadTime: '10 years ago',
-        thumbnail: 'https://img.youtube.com/vi/LsoLEjrDogU/hqdefault.jpg'
-      }
-    ];
-
-    const container = document.getElementById('videosContainer');
-    const modal = document.getElementById('playerModal');
-    const iframe = modal.querySelector('iframe');
-    const closeBtn = document.getElementById('closePlayerBtn');
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-
-    function createVideoCard(video) {
+  function renderVideos(list) {
+    const container = document.getElementById('videoGrid');
+    container.innerHTML = '';
+    list.forEach(video => {
       const card = document.createElement('div');
-      card.classList.add('video-card');
-      card.tabIndex = 0;
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', `${video.title} - 재생`);
-
+      card.className = 'video-card';
       card.innerHTML = `
-        <img src="${video.thumbnail}" alt="${video.title} 썸네일" />
+        <div class="thumbnail" style="background-image:url('${video.thumbnail}')"></div>
         <div class="video-info">
           <div class="video-title">${video.title}</div>
-          <div class="video-meta">${video.author} • ${video.views} • ${video.uploadTime}</div>
+          <div class="video-channel">${video.channel}</div>
         </div>
       `;
-
-      card.addEventListener('click', () => playVideo(video.id));
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          playVideo(video.id);
-        }
-      });
-
-      return card;
-    }
-
-    function renderVideos(filter = '') {
-      container.innerHTML = '';
-      const filtered = videos.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
-      filtered.forEach(v => container.appendChild(createVideoCard(v)));
-    }
-
-    function playVideo(id) {
-      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
-      modal.classList.add('active');
-      modal.focus();
-    }
-
-    function closeVideo() {
-      iframe.src = '';
-      modal.classList.remove('active');
-    }
-
-    closeBtn.addEventListener('click', closeVideo);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeVideo();
+      container.appendChild(card);
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('active')) {
-        closeVideo();
-      }
-    });
+  }
 
-    searchBtn.addEventListener('click', () => {
-      renderVideos(searchInput.value);
-    });
-    searchInput.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter') {
-        renderVideos(searchInput.value);
-      }
-    });
+  // 초기 렌더링
+  renderVideos(videos);
 
-    renderVideos();
-  </script>
+  // 검색 기능 (간단히 제목 내 포함 여부 체크)
+  document.getElementById('searchInput').addEventListener('input', e => {
+    const term = e.target.value.toLowerCase();
+    const filtered = videos.filter(v => v.title.toLowerCase().includes(term));
+    renderVideos(filtered);
+  });
+</script>
 </body>
 </html>
