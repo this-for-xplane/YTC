@@ -1,556 +1,333 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>YouTube Clone Deluxe</title>
-<style>
-  :root {
-    --bg-light: #f9f9f9;
-    --bg-dark: #181818;
-    --color-light: #000;
-    --color-dark: #fff;
-    --header-bg-light: #fff;
-    --header-bg-dark: #202020;
-    --sidebar-bg-light: #f1f1f1;
-    --sidebar-bg-dark: #202020;
-    --video-bg-light: #fff;
-    --video-bg-dark: #282828;
-  }
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg-dark);
-    color: var(--color-dark);
-    transition: background 0.3s, color 0.3s;
-  }
-  body.light {
-    background: var(--bg-light);
-    color: var(--color-light);
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background: var(--header-bg-dark);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    transition: background 0.3s;
-  }
-  body.light header {
-    background: var(--header-bg-light);
-  }
-  .logo {
-    color: #ff0000;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: default;
-  }
-  .search {
-    flex-grow: 1;
-    max-width: 500px;
-    margin: 0 20px;
-  }
-  .search input {
-    width: 100%;
-    padding: 7px 10px;
-    border-radius: 3px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-  }
-  .sidebar {
-    width: 220px;
-    background: var(--sidebar-bg-dark);
-    height: 100vh;
-    position: fixed;
-    top: 52px;
-    left: 0;
-    overflow-y: auto;
-    box-shadow: 2px 0 6px rgba(0,0,0,0.4);
-    transition: background 0.3s;
-  }
-  body.light .sidebar {
-    background: var(--sidebar-bg-light);
-    box-shadow: 2px 0 6px rgba(0,0,0,0.1);
-  }
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .sidebar li {
-    padding: 14px 25px;
-    cursor: pointer;
-    color: #ccc;
-    transition: background 0.2s, color 0.2s;
-  }
-  .sidebar li:hover {
-    background: #ff0000;
-    color: white;
-  }
-  .content {
-    margin-left: 220px;
-    padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    transition: margin-left 0.3s;
-  }
-  @media (max-width: 768px) {
-    .sidebar {
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini YouTube Clone</title>
+  <style>
+    /* reset */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background-color: #fff;
+      color: #202020;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header .logo {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    header .logo img {
+      height: 24px;
+      margin-right: 8px;
+    }
+    header .search-bar {
+      flex: 1;
+      margin: 0 16px;
+      display: flex;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    header .search-bar input {
+      flex: 1;
+      border: none;
+      padding: 8px 12px;
+      font-size: 16px;
+      outline: none;
+    }
+    header .search-bar button {
+      background-color: #f8f8f8;
+      border: none;
+      padding: 0 16px;
+      cursor: pointer;
+      font-size: 18px;
+      color: #555;
+      border-left: 1px solid #ccc;
+      transition: background-color 0.2s;
+    }
+    header .search-bar button:hover {
+      background-color: #e2e2e2;
+    }
+    header .icon-btns {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #555;
+    }
+    aside.sidebar {
+      width: 240px;
+      border-right: 1px solid #ddd;
+      height: calc(100vh - 56px);
+      position: fixed;
+      top: 56px;
+      left: 0;
+      background: #fff;
+      padding-top: 16px;
+      overflow-y: auto;
+    }
+    aside.sidebar ul {
+      list-style: none;
+    }
+    aside.sidebar ul li {
+      padding: 12px 24px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #444;
+      transition: background-color 0.2s;
+    }
+    aside.sidebar ul li:hover {
+      background-color: #eee;
+    }
+    main.content {
+      margin-left: 240px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+      gap: 24px;
+    }
+    .video-card {
+      cursor: pointer;
+    }
+    .video-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .video-info {
+      margin-top: 8px;
+    }
+    .video-title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: #030303;
+      line-height: 1.3;
+    }
+    .video-meta {
+      font-size: 0.875rem;
+      color: #606060;
+    }
+    /* 재생 모달 */
+    #playerModal {
       display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      padding: 24px;
     }
-    .content {
-      margin-left: 0;
+    #playerModal.active {
+      display: flex;
     }
-  }
-  .video {
-    background: var(--video-bg-dark);
-    border-radius: 8px;
-    width: 320px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    cursor: pointer;
-    overflow: hidden;
-    transition: background 0.3s;
-  }
-  body.light .video {
-    background: var(--video-bg-light);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  .thumb {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-  }
-  .thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .play {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.6);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    font-size: 24px;
-    color: white;
-    pointer-events: none;
-  }
-  .info {
-    padding: 12px 14px;
-  }
-  .title {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 6px;
-    color: inherit;
-  }
-  .meta {
-    color: #aaa;
-    font-size: 14px;
-  }
-  /* Dark/light toggle button */
-  .toggle-btn {
-    background: transparent;
-    border: 2px solid #ff0000;
-    color: #ff0000;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
-  }
-  .toggle-btn:hover {
-    background: #ff0000;
-    color: white;
-  }
-
-  /* Video Player Modal */
-  #playerModal {
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1100;
-  }
-  #playerModal.active {
-    display: flex;
-  }
-  #playerModal iframe {
-    width: 80vw;
-    height: 45vw;
-    max-width: 960px;
-    max-height: 540px;
-    border: none;
-    border-radius: 8px;
-  }
-  #playerModal .close-btn {
-    position: absolute;
-    top: 20px;
-    right: 25px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  /* Comments Section */
-  .comments {
-    margin-top: 15px;
-    padding: 10px 14px;
-    background: var(--video-bg-dark);
-    border-radius: 8px;
-    max-height: 250px;
-    overflow-y: auto;
-  }
-  body.light .comments {
-    background: var(--video-bg-light);
-  }
-  .comment {
-    margin-bottom: 12px;
-    border-bottom: 1px solid #444;
-    padding-bottom: 8px;
-  }
-  body.light .comment {
-    border-color: #ccc;
-  }
-  .comment strong {
-    display: block;
-    margin-bottom: 3px;
-    color: #ff0000;
-  }
-  .comment p {
-    margin: 0;
-  }
-  .comment-form {
-    margin-top: 10px;
-    display: flex;
-    gap: 8px;
-  }
-  .comment-form input {
-    flex-grow: 1;
-    padding: 6px 10px;
-    border-radius: 4px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-  }
-  .comment-form button {
-    padding: 6px 14px;
-    background: #ff0000;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  .comment-form button:hover {
-    background: #cc0000;
-  }
-
-  /* Login Modal */
-  #loginModal {
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1200;
-  }
-  #loginModal.active {
-    display: flex;
-  }
-  #loginModal .modal-content {
-    background: var(--video-bg-dark);
-    padding: 25px 30px;
-    border-radius: 8px;
-    width: 300px;
-    color: white;
-    text-align: center;
-    transition: background 0.3s;
-  }
-  body.light #loginModal .modal-content {
-    background: var(--video-bg-light);
-    color: var(--color-light);
-  }
-  #loginModal h2 {
-    margin-top: 0;
-  }
-  #loginModal input {
-    width: 100%;
-    margin: 12px 0;
-    padding: 8px 10px;
-    border-radius: 4px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-  }
-  #loginModal button {
-    background: #ff0000;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  #loginModal button:hover {
-    background: #cc0000;
-  }
-  #loginModal .close-login {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-  }
-
-</style>
+    #playerModal iframe {
+      width: 80vw;
+      height: 45vw; /* 16:9 비율 */
+      max-width: 1280px;
+      max-height: 720px;
+      border: none;
+      border-radius: 8px;
+      background-color: black;
+    }
+    #closePlayerBtn {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      font-size: 32px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    /* 반응형 */
+    @media (max-width: 768px) {
+      aside.sidebar {
+        display: none;
+      }
+      main.content {
+        margin-left: 0;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 480px) {
+      main.content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-<header>
-  <div class="logo">YouTube</div>
-  <div class="search">
-    <input id="searchInput" type="text" placeholder="Search videos..." />
+  <header>
+    <div class="logo" aria-label="YouTube logo" tabindex="0" role="button" onclick="location.reload()">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube" />
+      <span style="font-weight:bold; font-size:1.2rem; color:#ff0000;">MiniTube</span>
+    </div>
+    <div class="search-bar" role="search">
+      <input type="search" id="searchInput" placeholder="검색" aria-label="검색어 입력" />
+      <button id="searchBtn" aria-label="검색">🔍</button>
+    </div>
+    <div class="icon-btns" role="navigation" aria-label="헤더 아이콘들">
+      <div title="마이크" role="button" tabindex="0">🎤</div>
+      <div title="업로드" role="button" tabindex="0">⬆️</div>
+      <div title="알림" role="button" tabindex="0">🔔</div>
+      <div title="프로필" role="button" tabindex="0">👤</div>
+    </div>
+  </header>
+
+  <aside class="sidebar" role="complementary" aria-label="사이드바 메뉴">
+    <ul>
+      <li>홈</li>
+      <li>탐색</li>
+      <li>구독</li>
+      <li>보관함</li>
+      <li>나중에 볼 동영상</li>
+      <li>시청 기록</li>
+    </ul>
+  </aside>
+
+  <main class="content" id="videosContainer" role="main" aria-live="polite">
+    <!-- 영상 카드들 -->
+  </main>
+
+  <div id="playerModal" role="dialog" aria-modal="true" aria-label="동영상 재생 모달">
+    <span id="closePlayerBtn" aria-label="닫기" role="button" tabindex="0">&times;</span>
+    <iframe src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
   </div>
-  <button id="toggleThemeBtn" class="toggle-btn">Light Mode</button>
-  <button id="loginBtn" class="toggle-btn" style="margin-left:10px;">Login</button>
-</header>
 
-<nav class="sidebar">
-  <ul>
-    <li>Home</li>
-    <li>Trending</li>
-    <li>Subscriptions</li>
-    <li>Library</li>
-    <li>History</li>
-    <li>Watch Later</li>
-  </ul>
-</nav>
+  <script>
+    const videos = [
+      {
+        id: 'dQw4w9WgXcQ',
+        title: 'Rick Astley - Never Gonna Give You Up',
+        author: 'Rick Astley',
+        views: '1.2B views',
+        uploadTime: '13 years ago',
+        thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg'
+      },
+      {
+        id: '3JZ_D3ELwOQ',
+        title: 'Imagine Dragons - Believer',
+        author: 'Imagine Dragons',
+        views: '1B views',
+        uploadTime: '5 years ago',
+        thumbnail: 'https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg'
+      },
+      {
+        id: 'fJ9rUzIMcZQ',
+        title: 'Queen - Bohemian Rhapsody',
+        author: 'Queen',
+        views: '1.5B views',
+        uploadTime: '14 years ago',
+        thumbnail: 'https://img.youtube.com/vi/fJ9rUzIMcZQ/hqdefault.jpg'
+      },
+      {
+        id: '9bZkp7q19f0',
+        title: 'PSY - GANGNAM STYLE',
+        author: 'PSY',
+        views: '4.5B views',
+        uploadTime: '11 years ago',
+        thumbnail: 'https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg'
+      },
+      {
+        id: 'LsoLEjrDogU',
+        title: 'Coldplay - Paradise',
+        author: 'Coldplay',
+        views: '900M views',
+        uploadTime: '10 years ago',
+        thumbnail: 'https://img.youtube.com/vi/LsoLEjrDogU/hqdefault.jpg'
+      }
+    ];
 
-<main class="content" id="videosContainer">
-  <!-- 동영상 카드들이 JS로 생성됨 -->
-</main>
+    const container = document.getElementById('videosContainer');
+    const modal = document.getElementById('playerModal');
+    const iframe = modal.querySelector('iframe');
+    const closeBtn = document.getElementById('closePlayerBtn');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
 
-<!-- 영상 재생 모달 -->
-<div id="playerModal">
-  <div class="close-btn" id="closePlayer">&times;</div>
-  <iframe src="" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-  <div class="comments" id="commentsSection">
-    <!-- 댓글 -->
-  </div>
-  <form id="commentForm" class="comment-form">
-    <input id="commentInput" type="text" placeholder="Add a comment..." required />
-    <button type="submit">Post</button>
-  </form>
-</div>
+    function createVideoCard(video) {
+      const card = document.createElement('div');
+      card.classList.add('video-card');
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `${video.title} - 재생`);
 
-<!-- 로그인 모달 -->
-<div id="loginModal">
-  <div class="modal-content">
-    <div class="close-login" id="closeLogin">&times;</div>
-    <h2>Login</h2>
-    <input id="username" type="text" placeholder="Username" />
-    <input id="password" type="password" placeholder="Password" />
-    <button id="loginSubmit">Login</button>
-  </div>
-</div>
+      card.innerHTML = `
+        <img src="${video.thumbnail}" alt="${video.title} 썸네일" />
+        <div class="video-info">
+          <div class="video-title">${video.title}</div>
+          <div class="video-meta">${video.author} • ${video.views} • ${video.uploadTime}</div>
+        </div>
+      `;
 
-<script>
-  const videos = [
-    {
-      id: 'dQw4w9WgXcQ',
-      title: "Rick Astley - Never Gonna Give You Up",
-      author: "Rick Astley",
-      views: "1.2B views",
-      thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
-    },
-    {
-      id: '3JZ_D3ELwOQ',
-      title: "Imagine Dragons - Believer",
-      author: "Imagine Dragons",
-      views: "1B views",
-      thumbnail: "https://img.youtube.com/vi/3JZ_D3ELwOQ/hqdefault.jpg"
-    },
-    {
-      id: 'fJ9rUzIMcZQ',
-      title: "Queen - Bohemian Rhapsody",
-      author: "Queen",
-      views: "1.5B views",
-      thumbnail: "https://img.youtube.com/vi/fJ9rUzIMcZQ/hqdefault.jpg"
-    },
-    {
-      id: '9bZkp7q19f0',
-      title: "PSY - GANGNAM STYLE",
-      author: "PSY",
-      views: "4.5B views",
-      thumbnail: "https://img.youtube.com/vi/9bZkp7q19f0/hqdefault.jpg"
-    },
-    {
-      id: 'LsoLEjrDogU',
-      title: "Coldplay - Paradise",
-      author: "Coldplay",
-      views: "900M views",
-      thumbnail: "https://img.youtube.com/vi/LsoLEjrDogU/hqdefault.jpg"
-    },
-  ];
+      card.addEventListener('click', () => playVideo(video.id));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          playVideo(video.id);
+        }
+      });
 
-  const videosContainer = document.getElementById('videosContainer');
-  const searchInput = document.getElementById('searchInput');
-  const playerModal = document.getElementById('playerModal');
-  const closePlayer = document.getElementById('closePlayer');
-  const iframe = playerModal.querySelector('iframe');
-  const commentsSection = document.getElementById('commentsSection');
-  const commentForm = document.getElementById('commentForm');
-  const commentInput = document.getElementById('commentInput');
+      return card;
+    }
 
-  // 로그인
-  const loginBtn = document.getElementById('loginBtn');
-  const loginModal = document.getElementById('loginModal');
-  const closeLogin = document.getElementById('closeLogin');
-  const loginSubmit = document.getElementById('loginSubmit');
-  let loggedInUser = null;
+    function renderVideos(filter = '') {
+      container.innerHTML = '';
+      const filtered = videos.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
+      filtered.forEach(v => container.appendChild(createVideoCard(v)));
+    }
 
-  // 테마 토글
-  const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+    function playVideo(id) {
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+      modal.classList.add('active');
+      modal.focus();
+    }
 
-  function createVideoCard(video) {
-    const div = document.createElement('div');
-    div.className = 'video';
-    div.dataset.videoId = video.id;
+    function closeVideo() {
+      iframe.src = '';
+      modal.classList.remove('active');
+    }
 
-    div.innerHTML = `
-      <div class="thumb">
-        <img src="${video.thumbnail}" alt="${video.title}" />
-        <div class="play">&#9658;</div>
-      </div>
-      <div class="info">
-        <div class="title">${video.title}</div>
-        <div class="meta">${video.author} • ${video.views}</div>
-      </div>
-    `;
-
-    div.addEventListener('click', () => {
-      openVideo(video.id);
+    closeBtn.addEventListener('click', closeVideo);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeVideo();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeVideo();
+      }
     });
 
-    return div;
-  }
-
-  function renderVideos(filter = '') {
-    videosContainer.innerHTML = '';
-    const filtered = videos.filter(v => v.title.toLowerCase().includes(filter.toLowerCase()));
-    filtered.forEach(video => {
-      videosContainer.appendChild(createVideoCard(video));
+    searchBtn.addEventListener('click', () => {
+      renderVideos(searchInput.value);
     });
-  }
-
-  function openVideo(videoId) {
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    playerModal.classList.add('active');
-    loadComments(videoId);
-  }
-
-  function closeVideo() {
-    iframe.src = '';
-    playerModal.classList.remove('active');
-    clearComments();
-  }
-
-  // 댓글 저장 구조 (간단히 영상 ID별 배열)
-  const commentsDB = {};
-
-  function loadComments(videoId) {
-    commentsSection.innerHTML = '';
-    if(!commentsDB[videoId]) commentsDB[videoId] = [];
-    commentsDB[videoId].forEach(c => {
-      const div = document.createElement('div');
-      div.className = 'comment';
-      div.innerHTML = `<strong>${c.user}:</strong><p>${c.text}</p>`;
-      commentsSection.appendChild(div);
+    searchInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        renderVideos(searchInput.value);
+      }
     });
-  }
 
-  function clearComments() {
-    commentsSection.innerHTML = '';
-  }
-
-  commentForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if(!loggedInUser) {
-      alert('Please login to comment!');
-      openLoginModal();
-      return;
-    }
-    const text = commentInput.value.trim();
-    if(!text) return;
-    // 현재 재생중인 영상 ID
-    const videoId = iframe.src.match(/embed\/([^?]+)/)[1];
-    commentsDB[videoId].push({user: loggedInUser, text});
-    loadComments(videoId);
-    commentInput.value = '';
-  });
-
-  closePlayer.addEventListener('click', closeVideo);
-
-  searchInput.addEventListener('input', () => {
-    renderVideos(searchInput.value);
-  });
-
-  // 테마 토글 기능
-  toggleThemeBtn.addEventListener('click', () => {
-    if(document.body.classList.contains('light')) {
-      document.body.classList.remove('light');
-      toggleThemeBtn.textContent = 'Light Mode';
-    } else {
-      document.body.classList.add('light');
-      toggleThemeBtn.textContent = 'Dark Mode';
-    }
-  });
-
-  // 로그인 모달 열기/닫기
-  loginBtn.addEventListener('click', openLoginModal);
-  closeLogin.addEventListener('click', closeLoginModal);
-
-  function openLoginModal() {
-    loginModal.classList.add('active');
-  }
-  function closeLoginModal() {
-    loginModal.classList.remove('active');
-  }
-
-  loginSubmit.addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
-    if(username && password) {
-      loggedInUser = username;
-      alert(`Welcome, ${username}!`);
-      closeLoginModal();
-    } else {
-      alert('Please enter username and password.');
-    }
-  });
-
-  // 초기 렌더링
-  renderVideos();
-
-</script>
+    renderVideos();
+  </script>
 </body>
 </html>
