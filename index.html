@@ -3,169 +3,225 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>YouTube Clone</title>
+<title>YouTube - 클론</title>
 <style>
-  /* 간단히 유튜브 기본 스타일 복제 */
+  @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+  * {
+    box-sizing: border-box;
+  }
   body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     background: #fff;
+    color: #030303;
   }
   header {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
     position: sticky;
     top: 0;
-    z-index: 100;
+    height: 56px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0 16px;
+    z-index: 10;
   }
   .logo {
-    font-weight: bold;
-    font-size: 24px;
+    display: flex;
+    align-items: center;
     color: #ff0000;
+    font-weight: 700;
+    font-size: 24px;
     cursor: pointer;
+  }
+  .logo svg {
+    height: 24px;
+    margin-right: 8px;
+    fill: #ff0000;
   }
   .search-bar {
     flex: 1;
-    margin: 0 20px;
+    max-width: 600px;
+    margin: 0 16px;
+    position: relative;
   }
   .search-bar input {
     width: 100%;
-    padding: 8px 12px;
+    height: 32px;
+    padding: 0 8px;
     font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 2px 0 0 2px;
+    outline: none;
   }
-  .main {
+  .search-bar button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 32px;
+    width: 64px;
+    border: none;
+    background: #f8f8f8;
+    border-left: 1px solid #ccc;
+    border-radius: 0 2px 2px 0;
+    cursor: pointer;
+    font-weight: 600;
+    color: #030303;
+  }
+  .user-menu {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #606060;
+    cursor: pointer;
+  }
+  main {
     display: flex;
+    height: calc(100vh - 56px);
   }
   nav {
     width: 240px;
-    border-right: 1px solid #ddd;
-    padding: 10px;
-    height: calc(100vh - 50px);
-    box-sizing: border-box;
+    border-right: 1px solid #e5e5e5;
+    padding: 16px 0;
+    background: #fff;
   }
   nav ul {
     list-style: none;
-    padding: 0;
+    padding-left: 0;
+    margin: 0;
   }
   nav li {
-    margin: 12px 0;
+    padding: 12px 24px;
     cursor: pointer;
+    color: #606060;
+    font-size: 14px;
   }
   nav li:hover {
-    color: #ff0000;
+    background: #f2f2f2;
+    color: #000;
   }
   section.content {
     flex: 1;
-    padding: 16px;
-    box-sizing: border-box;
+    padding: 16px 24px;
+    overflow-y: auto;
+    background: #fff;
   }
-  .video-grid {
+  .videos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+    gap: 24px 16px;
   }
   .video-card {
     cursor: pointer;
   }
   .thumbnail {
     width: 100%;
-    height: 160px;
-    background-color: #ddd;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
     background-size: cover;
     background-position: center;
-    border-radius: 4px;
+    background-repeat: no-repeat;
   }
   .video-info {
-    margin-top: 8px;
+    margin-top: 12px;
   }
   .video-title {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
+    color: #030303;
     line-height: 1.2;
+    margin-bottom: 4px;
   }
-  .video-channel {
+  .video-meta {
     font-size: 12px;
-    color: #555;
+    color: #606060;
   }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">YouTube</div>
-  <div class="search-bar">
-    <input type="text" placeholder="검색" id="searchInput" />
+  <div class="logo" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M10 15l5.19-3L10 9z"/><path d="M19.63 7.36a2.24 2.24 0 0 0-1.58-1.58C16.4 5 12 5 12 5s-4.4 0-6.05.78a2.24 2.24 0 0 0-1.58 1.58C4 9 4 12 4 12s0 3 0.37 4.64a2.24 2.24 0 0 0 1.58 1.58C7.6 20 12 20 12 20s4.4 0 6.05-.78a2.24 2.24 0 0 0 1.58-1.58c.37-1.64.37-4.64.37-4.64s0-3-.37-4.64z"/></svg>
+    YouTube
   </div>
-  <div class="user-menu">프로필</div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="검색" aria-label="검색" />
+    <button>검색</button>
+  </div>
+  <div class="user-menu" title="프로필"></div>
 </header>
-<div class="main">
+<main>
   <nav>
     <ul>
       <li>홈</li>
       <li>탐색</li>
       <li>구독</li>
       <li>보관함</li>
+      <li>이력</li>
+      <li>나중에 볼 동영상</li>
+      <li>좋아요 표시한 동영상</li>
     </ul>
   </nav>
   <section class="content">
-    <div class="video-grid" id="videoGrid">
-      <!-- 영상 카드들이 여기에 동적 생성됨 -->
-    </div>
+    <div class="videos-grid" id="videoGrid"></div>
   </section>
-</div>
+</main>
 
 <script>
-  // 더미 영상 데이터
   const videos = [
     {
-      title: "최신 인기 영상 1",
-      channel: "채널1",
-      thumbnail: "https://i.ytimg.com/vi/ScMzIvxBSi4/hqdefault.jpg"
+      title: "MrBeast’s Biggest Giveaway Ever",
+      channel: "MrBeast",
+      views: "21M회",
+      uploaded: "2개월 전",
+      thumbnail: "https://i.ytimg.com/vi/6P3nF7XbwN8/hqdefault.jpg"
     },
     {
-      title: "인기 음악 MV",
-      channel: "뮤직채널",
-      thumbnail: "https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg"
+      title: "9분 다큐 | 지구의 비밀",
+      channel: "다큐9분",
+      views: "1.8M회",
+      uploaded: "4개월 전",
+      thumbnail: "https://i.ytimg.com/vi/D0w5ebV7r50/hqdefault.jpg"
     },
     {
-      title: "게임 하이라이트",
-      channel: "게임채널",
-      thumbnail: "https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg"
-    },
-    {
-      title: "코딩 튜토리얼",
-      channel: "프로그래밍",
-      thumbnail: "https://i.ytimg.com/vi/Ke90Tje7VS0/hqdefault.jpg"
+      title: "dlwlrma (IU) - 팔레트 (Palette) Official MV",
+      channel: "dlwlrma",
+      views: "45M회",
+      uploaded: "3년 전",
+      thumbnail: "https://i.ytimg.com/vi/CXftPnt_VMA/hqdefault.jpg"
     }
   ];
 
-  function renderVideos(list) {
-    const container = document.getElementById('videoGrid');
-    container.innerHTML = '';
-    list.forEach(video => {
-      const card = document.createElement('div');
-      card.className = 'video-card';
-      card.innerHTML = `
-        <div class="thumbnail" style="background-image:url('${video.thumbnail}')"></div>
-        <div class="video-info">
-          <div class="video-title">${video.title}</div>
-          <div class="video-channel">${video.channel}</div>
-        </div>
-      `;
-      container.appendChild(card);
+  const grid = document.getElementById("videoGrid");
+
+  function createVideoCard(video) {
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `
+      <div class="thumbnail" style="background-image:url('${video.thumbnail}')"></div>
+      <div class="video-info">
+        <div class="video-title" title="${video.title}">${video.title}</div>
+        <div class="video-meta">${video.channel} • ${video.views} • ${video.uploaded}</div>
+      </div>
+    `;
+    return card;
+  }
+
+  function renderVideos() {
+    grid.innerHTML = "";
+    videos.forEach(v => {
+      grid.appendChild(createVideoCard(v));
     });
   }
 
-  // 초기 렌더링
-  renderVideos(videos);
+  renderVideos();
 
-  // 검색 기능 (간단히 제목 내 포함 여부 체크)
-  document.getElementById('searchInput').addEventListener('input', e => {
-    const term = e.target.value.toLowerCase();
-    const filtered = videos.filter(v => v.title.toLowerCase().includes(term));
-    renderVideos(filtered);
+  // 검색 필터 (제목 기준)
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const keyword = e.target.value.toLowerCase();
+    const filtered = videos.filter(v => v.title.toLowerCase().includes(keyword));
+    grid.innerHTML = "";
+    filtered.forEach(v => grid.appendChild(createVideoCard(v)));
   });
 </script>
 </body>
